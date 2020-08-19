@@ -1,26 +1,35 @@
 import React from 'react';
-import logo from './logo.svg';
+import { useQuery, gql } from '@apollo/client';
 import './App.css';
+import { TScore } from './types';
 
-function App() {
+const HIGH_SCORES = gql`
+  query GetHighScores {
+    allScores(orderBy: "score_DESC") {
+      player {
+        name
+      }
+      score
+    }
+  }
+`;
+
+const App = () => {
+  const { loading, error, data } = useQuery(HIGH_SCORES);
+
+  if (error) {
+    console.error(error);
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {loading ? (
+        <p>Loading data...</p>
+      ) : (
+        <pre>{data.allScores.map((score: TScore) => `${score.player.name} : ${score.score}\n`)}</pre>
+      )}
     </div>
   );
-}
+};
 
 export default App;
