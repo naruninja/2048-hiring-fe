@@ -1,35 +1,52 @@
-import React from 'react';
-import { useQuery, gql } from '@apollo/client';
-import './App.css';
-import { TScore } from './types';
-
-const HIGH_SCORES = gql`
-  query GetHighScores {
-    allScores(orderBy: "score_DESC") {
-      player {
-        name
-      }
-      score
-    }
-  }
-`;
+import React from 'react'
+import { BrowserRouter, Switch, Route } from 'react-router-dom'
+import { LeaderboardScreen } from './screens/LeaderboardScreen'
+import { RegisterScreen } from './screens/RegisterScreen'
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import * as ___ from 'styled-components/cssprop'
+import { GameScreen } from './screens/GameScreen'
+import 'styled-components/macro'
 
 const App = () => {
-  const { loading, error, data } = useQuery(HIGH_SCORES);
+   return (
+      <BrowserRouter>
+         <div
+            className="App"
+            css={`
+               button {
+                  background-color: #ddd;
+                  border: 0;
+                  border-radius: 4px;
+                  padding: 8px 16px;
 
-  if (error) {
-    console.error(error);
-  }
+                  &:not([disabled]) {
+                     cursor: pointer;
+                  }
+                  &:hover {
+                     &:not([disabled]) {
+                        background-color: #ccc;
+                     }
+                  }
+               }
+               a {
+                  text-decoration: none;
+                  color: #0078ff;
+               }
+            `}>
+            <Switch>
+               <Route path={'/'} exact>
+                  <LeaderboardScreen />
+               </Route>
+               <Route path={'/register'} exact>
+                  <RegisterScreen />
+               </Route>
+               <Route path={'/game'} exact>
+                  <GameScreen />
+               </Route>
+            </Switch>
+         </div>
+      </BrowserRouter>
+   )
+}
 
-  return (
-    <div className="App">
-      {loading ? (
-        <p>Loading data...</p>
-      ) : (
-        <pre>{data.allScores.map((score: TScore) => `${score.player.name} : ${score.score}\n`)}</pre>
-      )}
-    </div>
-  );
-};
-
-export default App;
+export default App

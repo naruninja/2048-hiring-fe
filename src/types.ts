@@ -1,10 +1,11 @@
 export type TPlayer = {
-  id: number;
-  name: string;
-  email: string;
-};
+   id: number
+   name: string
+   email: string
+}
 
 export type TScore = {
-  player: TPlayer;
-  score: number;
-};
+   id: number
+   player: TPlayer
+   score: number
+}
